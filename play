@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+import argparse
+
+from read_csv import game_from_csv
+from read_yaml import game_from_yaml
+from play import play, Recorder
+
+# DFLT_GAME = 'other_tower.csv'
+# DFLT_GAME = 'sid-in-space.csv'
+DFLT_GAME = 'happy-time.csv'
+
+
+def main():
+    parser = argparse.ArgumentParser(description='strategy improver',
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('-g', '--game', default=DFLT_GAME, help='game .csv file')
+    parser.add_argument('-o', '--output', default='mygame.csv', help='replay spreadsheet')
+    parser.add_argument('-b', '--gem-boost', default=1, help='gem boost level')
+    parser.add_argument('-c', '--config', type=str, help='config YAML file')
+    args = parser.parse_args()
+
+    if args.config:
+        g = game_from_yaml(args.config)
+    else:
+        g = game_from_csv(args.game)
+        g.set_gem_boost(args.gem_boost)
+    print('recording to', args.output)
+    rec = Recorder(args.output, g)
+    play(g, rec)
+
+
+main()

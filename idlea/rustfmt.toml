@@ -1,0 +1,11 @@
+# indent_style = "Block"
+indent_style = "Visual"
+reorder_imports = false
+comment_width = 99
+enum_discrim_align_threshold = 20
+max_width = 99
+fn_single_line = true
+overflow_delimited_expr = true
+struct_field_align_threshold = 20
+struct_lit_single_line = true
+use_field_init_shorthand = true

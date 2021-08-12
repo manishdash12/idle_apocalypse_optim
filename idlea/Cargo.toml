@@ -1,0 +1,29 @@
+[package]
+name = "idlea"
+version = "0.1.0"
+authors = ["Topher Cawlfield <ccawlfield@gogoair.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "idlea"
+path = "src/lib.rs"
+
+[[bin]]
+name = "idlea"
+path = "src/main.rs"
+
+[dependencies]
+csv = "1.1.1"
+serde = "1.0.101"
+docopt = "1.1.0"
+num-iter = "0.1.39"
+streaming-iterator = "0.1.4"
+hashbrown = "0.6.3"
+spmc = "0.3.0"
+num_cpus = "1.11.1"
+serde_yaml = "0.8.11"
+regex = "1.3.1"
+rand = "0.7.2"
+cpu-time = "1.0.0"

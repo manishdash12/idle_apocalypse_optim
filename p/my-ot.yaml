@@ -1,0 +1,20 @@
+game: g/other_tower.csv
+gem_boost: 1
+time_left: 1d 22h 32m 0s
+points: 809200000
+resources:
+   Sapphire: 53000
+   Emerald: 21900
+   Ruby: 8500
+levels:
+   Feral Fiona: 10
+   Jingles: 9
+   Ox: 5
+   Batilda: 5
+   Murky Mandy: 1
+   Patches: 5
+   Sapphire Boost: 5
+   Emerald Boost: 5
+   Ruby Boost: 2
+   Speed Boost: 3
+   Damage Boost: 1

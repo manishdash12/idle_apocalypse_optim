@@ -1,0 +1,24 @@
+game: g/lost-in-time.csv
+gem_boost: 1
+time_left: 1d 17h 22m 0s
+points: 4500000
+resources:
+   Blue: 19300
+   Green: 78700
+   Red: 2200
+   Yellow: 11400
+levels:
+   Trinity: 10
+   Bronte: 10
+   Anne: 8
+   Petra: 10
+   Manny: 2
+   Tony: 6
+   Ruth: 8
+   Rex: 0
+   Blue Boost: 4
+   Green Boost: 3
+   Red Boost: 2
+   Yellow Boost: 1
+   Prehistorics Speed: 5
+   Time Dust Boost: 2

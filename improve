@@ -1,0 +1,103 @@
+#!/usr/bin/python3
+
+import argparse
+import time
+
+# import game
+import upg_seq
+from read_csv import game_from_csv
+from play import short
+
+DFLT_GAME = 'happy-time.csv'
+
+
+def main():
+    parser = argparse.ArgumentParser(description='strategy improver',
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('-g', '--game', default=DFLT_GAME, help='game .csv file')
+    parser.add_argument('-o', '--output', default='best_moves.txt', help='best moves file')
+    parser.add_argument('-b', '--gem-boost', default=1, help='gem boost level')
+    parser.add_argument('-p', '--pushy', action="store_true", help='"pushy" improvements')
+    parser.add_argument('-2', '--second', action="store_true", help='second-shift improvements')
+    parser.add_argument('replay', nargs=1)
+    args = parser.parse_args()
+    replay = args.replay[0]  # nargs=1 gives a list of length 1
+
+    g = game_from_csv(args.game)
+
+    g.set_gem_boost(args.gem_boost)
+
+    upg_seq.init_prereqs(g)
+    seq = upg_seq.load_sequence(replay, g)
+
+    # seq = seq[:9]
+
+    print(len(seq), 'upgrades in initial sequence')
+    initial_score = upg_seq.score(seq, g)
+    initial_spare = upg_seq.score_spare(seq, g)
+    spare_hours = initial_spare
+    print('initial score is', short(initial_score, '.3f'), f'with {spare_hours:.3f} hours to spare')
+
+    # start = time.time()
+    # for _ in range(1000):
+    #     upg_seq.score(seq, g)
+    # end = time.time()
+    # print(f'1000 scorings takes {end-start:.6f} seconds')
+    # print(' '.join([f'{u.upg_idx}->{u.level}' for u in seq[:10]]))
+    # # for new_seq in upg_seq.try_seqs_pushy(seq[:9]):
+    # for u in seq:
+    #     print(f'{u.upg_idx}->{u.level} needs', ' '.join([f'{u.upg_idx}->{u.level}' for u in upg_seq.upg_prereq[u]]))
+    # for new_seq in upg_seq.try_seqs(seq[:10]):
+    #     print(' '.join([f'{u.upg_idx}->{u.level}' for u in new_seq]))
+    # return
+
+    def write_seq(seq):
+        with open(args.output, 'w') as fout:
+            for upg in seq:
+                if isinstance(upg, str):
+                    print(upg, file=fout)
+                else:
+                    print(upg.upg_idx, file=fout)
+
+    improve(seq, initial_spare, g, args.pushy, args.second, write_seq)
+
+
+def improve(initial_seq, initial_score, g, pushy=False, second=False, write_seq=None):
+    best_seq = initial_seq
+    best_score = initial_score
+    first = True
+    while True:
+        if not first and write_seq is not None:
+            write_seq(best_seq)
+        first = False
+        (new_best_seq, new_best_score) = upg_seq.find_improvement(
+            best_seq, best_score, g)
+        if new_best_score > best_score:
+            print('Found improvement by', short(new_best_score - best_score, '.3f'),
+                  'to', short(new_best_score, '.3f'))
+            best_score = new_best_score
+            best_seq = new_best_seq
+            continue
+        if pushy:
+            (new_best_seq, new_best_score) = upg_seq.find_improvement(
+                best_seq, best_score, g, pushy=True, second=False)
+            if new_best_score > best_score:
+                print('Found improvement by', short(new_best_score - best_score, '.3f'),
+                      'to', short(new_best_score, '.3f'))
+                best_score = new_best_score
+                best_seq = new_best_seq
+                continue
+        if second:
+            (new_best_seq, new_best_score) = upg_seq.find_improvement(
+                best_seq, best_score, g, pushy=pushy, second=True)
+            if new_best_score > best_score:
+                print('Found improvement by', short(new_best_score - best_score, '.3f'),
+                      'to', short(new_best_score, '.3f'))
+                best_score = new_best_score
+                best_seq = new_best_seq
+                continue
+        break
+    return best_seq
+
+
+main()
